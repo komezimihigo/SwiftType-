@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Typing Trainer{% endblock %}
+
+{% block content %}
+
+ <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+
+
+
+
+<div class="container">
+    <section class="hero">
+        <h1>Master Your Typing Skills</h1>
+        <p>Practice typing with instant feedback and AI-powered training</p>
+        <div class="hero-buttons">
+            <button id="startBtn" class="btn btn-primary btn-lg">Start Typing</button>
+
+
+<div id="typingOverlay">
+
+    <div class="typingModal">
+
+        <button id="closeTypingBtn">✕</button>
+
+        <div id="typingZoneX">
+
+            <div class="test-container">
+
+                <!-- TIMER -->
+                <div class="timer-section">
+                    <div class="timer" id="timer">60</div>
+                </div>
+
+                <!-- COMBO -->
+                <div class="combo-display">
+                    <div
+                        class="combo-counter"
+                        id="comboDisplay"
+                        style="display:none;">
+                    </div>
+                </div>
+
+                <!-- TEXT -->
+                <div class="text-display">
+                    <div
+                        class="practice-text"
+                        id="practiceText">
+                    </div>
+                </div>
+
+                <!-- INPUT -->
+                <div class="typing-input-container">
+
+                    <input
+                        type="text"
+                        class="typing-input"
+                        id="typingInput"
+                        placeholder="Click here and start typing..."
+                        autocomplete="off"
+                        spellcheck="false">
+
+                </div>
+
+                <!-- KEYBOARD -->
+                <div class="keyboard-wrapper">
+
+                    <div
+                        class="keyboard"
+                        id="keyboard">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LOGIN POPUP
+========================= -->
+
+<div id="loginPopupZ">
+
+    <div class="popup-box">
+
+        <h2>Test Complete 🎉</h2>
+
+        <p>
+            Login to view your score and save your progress.
+        </p>
+
+        <div class="popup-buttons">
+
+            <button
+                id="loginBtnZ"
+                onclick="goLogin()">
+
+                Login
+
+            </button>
+
+            <button
+                id="cancelBtnZ"
+                onclick="cancelPopup()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+            <a href="/auth/login" class="btn btn-secondary btn-lg">login</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time Feedback</h3>
+                <p>See your WPM, accuracy, and errors as you type</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Detailed Stats</h3>
+                <p>Track your progress with comprehensive statistics</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Trainer</h3>
+                <p>Get personalized practice based on your weak keys</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progress Tracking</h3>
+                <p>Monitor improvement over time</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Improve?</h2>
+        <p>Sign up for free and start your typing journey today</p>
+        <a href="/auth/register" class="btn btn-primary btn-lg">Get Started</a>
+    </section>
+</div>
+ </div>
+
+<link rel="icon" type="image/png" href="/static/1234.jpg">
+
+
+
+
+
+
+
+<script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+
+{% endblock %}

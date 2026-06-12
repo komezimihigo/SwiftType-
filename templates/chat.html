@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}AI Chatbot - Typing Trainer{% endblock %}
+
+{% block content %}
+ <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+
+<div class="container">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h4>AI Typing Assistant</h4>
+            <p>Get tips, advice, and answers about typing training</p>
+        </div>
+
+        <div class="chat-wrapper">
+            <!-- Chat Messages Area -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot-message">
+                    <div class="message-content">
+                        <p>👋 Hello! I'm your AI typing assistant. how can i help you:</p>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+
+                        </ul>
+                        <p style="margin-top: 0.5rem;">Feel free to ask me anything related to typing!</p>
+                    </div>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="messageInput"
+                        class="chat-input"
+                        placeholder="Ask me anything about typing..."
+                        autocomplete="off"
+                    >
+                    <button id="sendBtn" class="send-btn">
+                        <span>Send</span>
+                        <span class="send-icon">→</span>
+                    </button>
+                </div>
+                <div id="chatError" class="alert alert-error" style="display:none;"></div>
+                <p class="chat-hint">Press Enter or click Send to ask a question</p>
+            </div>
+        </div>
+
+        <!-- Quick Suggestions -->
+        <div class="quick-suggestions">
+            <p>Quick questions:</p>
+            <div class="suggestions-grid">
+                <button class="suggestion-btn" data-question="How can I improve my typing speed?">How to improve speed</button>
+                <button class="suggestion-btn" data-question="What are common typing mistakes?">Common mistakes</button>
+                <button class="suggestion-btn" data-question="What is the correct typing posture?">Typing posture</button>
+                <button class="suggestion-btn" data-question="How do I practice touch typing?">Touch typing tips</button>
+            </div>
+        </div>
+    </div>
+</div>
+ </div>
+
+<script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
+

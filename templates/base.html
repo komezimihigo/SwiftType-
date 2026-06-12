@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/static/12.jpg">
+    <title>{% block title %}Typing Trainer{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+    <style>
+.navbar{
+    background:#111827;
+
+    justify-content:space-between;
+
+    padding:15px 20px;
+    color:white;
+    position:relative;
+}
+
+.navbar-links{
+    display:flex;
+    gap:20px;
+}
+
+.navbar-links a{
+    color:white;
+    text-decoration:none;
+    font-size:18px;
+}
+
+/* HAMBURGER */
+
+.hamburger{
+    display:none;
+    font-size:30px;
+    cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hamburger{
+        display:block;
+    }
+
+    .navbar-links{
+        display:none;
+
+        position:absolute;
+        top:60px;
+        left:0;
+
+        width:100%;
+        background:#1f2937;
+
+        flex-direction:column;
+        text-align:center;
+        padding:20px 0;
+    }
+
+    .navbar-links.active{
+        display:flex;
+    }
+
+}
+
+</style>
+
+</head>
+<body>
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+                <a href="/" class="log">
+                    <img src="{{ url_for('static', filename='log.png') }}"
+                         alt="SwiftType Log"
+
+                          >
+                </a>
+            <div class="navbar-menu">
+                <div id="hamburger" class="hamburger">
+                    ☰
+                </div>
+                <div id="navbarLinks" class="navbar-links">
+                    <a href="/">Home</a>
+                    <a href="/test">Test</a>
+                    <a href="/chat/">ai</a>
+                    <a href="/trainer">training</a>
+                    <a href="/listen">listen&type</a>
+                    <a href="/dashboard" id="dashboardLink" style="display:none;">Dashboard</a>
+                    <button id="logoutBtn" style="display:none;" class="btn btn-secondary">Logout</button>
+                    <a href="/auth/login" id="loginLink">Login</a>
+                    <a href="/auth/register" id="registerLink">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+      <button onclick="openChat()">
+            <a href="/chat/" class="ai-btn">🧠</a>
+      </button>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Typing Trainer. Keep practicing to improve!</p>
+    </footer>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <script>
+function toggleChat() {
+  let chatBox = document.getElementById("chatbox");
+
+  if (chatBox.style.display === "flex") {
+    chatBox.style.display = "none";
+  } else {
+    chatBox.style.display = "flex";
+  }
+}
+
+
+const hamburger = document.getElementById("hamburger");
+const navbarLinks = document.getElementById("navbarLinks");
+
+hamburger.onclick = function () {
+    navbarLinks.classList.toggle("active");
+};
+
+
+
+</script>
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

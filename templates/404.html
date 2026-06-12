@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Typing Trainer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="text-align: center; padding: 3rem 0;">
+        <h1 style="font-size: 3rem; color: var(--error-color);">404</h1>
+        <h2>Page Not Found</h2>
+        <p style="color: var(--text-light); margin: 1rem 0;">The page you're looking for doesn't exist.</p>
+        <a href="/" class="btn btn-primary">Go Home</a>
+    </div>
+</div>
+
+
+ <button id="startBtnX">Start Typing</button>
+<div id="typingZoneX" style="display:none;">
+<div class="test-container">
+      <div class="timer-section">
+            <div class="timer" id="timer">60</div>
+        </div>
+
+
+        <!-- COMBO COUNTER -->
+        <div class="combo-display">
+            <div class="combo-counter" id="comboDisplay" style="display: none;"></div>
+        </div>
+
+
+        <!-- TYPING SECTION -->
+        <div class="text-display">
+            <div class="practice-text" id="practiceText">
+                <!-- Text will be loaded here -->
+            </div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="typing-input-container">
+            <input
+                type="text"
+                class="typing-input"
+                id="typingInput"
+                placeholder="Click here and start typing..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">Start Test</button>
+            <button class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
+            <button class="btn btn-secondary" id="resetBtn">Reset</button>
+
+        </div>
+        <!-- KEYBOARD -->
+        <div >
+
+            <div class="keyboard" id="keyboard"></div>
+      </div>
+  </div>
+
+ </div>
+    <!-- RESULTS SCREEN -->
+
+
+    <div class="results-screen" id="results-screen">
+        <div class="results-content">
+            <h2>✨ Test Complete!</h2>
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-value" id="finalWpm">0</div>
+                    <div class="result-label">Final WPM</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalAccuracy">0%</div>
+                    <div class="result-label">Accuracy</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalErrors">0</div>
+                    <div class="result-label">Errors</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalCharacters">0</div>
+                    <div class="result-label">Typed</div>
+                </div>
+            </div>
+            <div class="weak-keys-display">
+                <h4>Weak Keys (Focus Area)</h4>
+                <div class="weak-keys-list" id="weakKeysList"></div>
+            </div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" id="retryBtn">Try Again</button>
+                <button class="btn btn-secondary" id="aiTrainBtn">AI Training</button>
+            </div>
+        </div>
+</div>
+<!-- Popup -->
+<div id="loginPopupZ" style="display:none;" class="popupBoxZ">
+    <p>You must login to view your score</p>
+    <button id="loginBtnZ">Login</button>
+    <button id="cancelBtnZ">Cancel</button>
+</div>
+
+{% endblock %}

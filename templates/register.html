@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Typing Trainer{% endblock %}
+
+{% block content %}
+ <!-- LOADING SIGN -->
+    <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+<div class="container">
+    <div class="auth-container">
+        <h1>Create Account</h1>
+
+        <form id="registerForm" class="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Choose a username" minlength="3">
+                <span class="error-message" id="usernameError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                <span class="error-message" id="emailError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a password" minlength="6">
+                <span class="error-message" id="passwordError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="passwordConfirm">Confirm Password</label>
+                <input type="password" id="passwordConfirm" name="passwordConfirm" required placeholder="Confirm your password" minlength="6">
+                <span class="error-message" id="passwordConfirmError"></span>
+            </div>
+
+            <div id="formError" class="alert alert-error" style="display:none;"></div>
+            <div id="formSuccess" class="alert alert-success" style="display:none;"></div>
+
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/auth/login">Login here</a></p>
+        </div>
+    </div>
+</div>
+ </div>
+
+<script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    // Clear errors
+    document.getElementById('formError').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'none';
+
+    if (password !== passwordConfirm) {
+        document.getElementById('formError').textContent = 'Passwords do not match';
+        document.getElementById('formError').style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch('/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+                password_confirm: passwordConfirm
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            document.getElementById('formSuccess').textContent = data.message;
+            document.getElementById('formSuccess').style.display = 'block';
+
+            setTimeout(() => {
+                window.location.href = '/auth/login';
+            }, 1500);
+        } else {
+            document.getElementById('formError').textContent = data.error;
+            document.getElementById('formError').style.display = 'block';
+        }
+    } catch (error) {
+        document.getElementById('formError').textContent = 'An error occurred. Please try again.';
+        document.getElementById('formError').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

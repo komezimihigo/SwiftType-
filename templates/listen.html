@@ -1,0 +1,759 @@
+{% extends "base.html" %}
+
+{% block title %}listen&type - Typing Trainer{% endblock %}
+
+{% block content %}
+     <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+    <style>
+        /* ==================== GLOBAL STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container1 {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* ==================== TOP BAR - COMPACT ==================== */
+        .top-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .stat-value.accuracy {
+            color: #27ae60;
+        }
+
+        .stat-value.errors {
+            color: #e74c3c;
+        }
+
+        /* ==================== SETUP SECTION ==================== */
+        .setup-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .setup-section h3 {
+            font-size: 0.9rem;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .setup-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .setup-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .setup-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .setup-item select,
+        .setup-item input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .setup-item select:focus,
+        .setup-item input:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 5px rgba(41, 128, 185, 0.3);
+        }
+
+        /* ==================== AUDIO CONTROLS ==================== */
+        .audio-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .audio-btn {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid #2980b9;
+            background: white;
+            color: #2980b9;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .audio-btn:hover {
+            background: #2980b9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(41, 128, 185, 0.3);
+        }
+
+        .audio-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-btn.play {
+            background: #2980b9;
+            color: white;
+        }
+
+        .audio-btn.play:hover {
+            background: #1f618d;
+        }
+
+        .audio-btn.replay {
+            opacity: 0.7;
+        }
+
+        .audio-btn.replay:disabled {
+            opacity: 0.3;
+        }
+
+        .replay-count {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-left: 0.25rem;
+        }
+
+        /* ==================== TEXT DISPLAY (HIDDEN) ==================== */
+        .text-display {
+            background: #ecf0f1;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #bdc3c7;
+        }
+
+        .text-display.hidden {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .text-display.shown {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .text-display.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .text-display.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* ==================== INPUT SECTION - TIGHT ==================== */
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .typing-input {
+            padding: 0.75rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .typing-input:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+        }
+
+        .typing-input::placeholder {
+            color: #bdc3c7;
+        }
+
+        .typing-input.disabled {
+            background: #ecf0f1;
+            color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .submit-btn {
+            padding: 0.75rem 1.5rem;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ==================== FEEDBACK SECTION ==================== */
+        .feedback-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            min-height: 80px;
+            display: none;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feedback-section.show {
+            display: block;
+        }
+
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .feedback-correct {
+            color: #27ae60;
+            border-left: 4px solid #27ae60;
+            padding-left: 0.75rem;
+        }
+
+        .feedback-incorrect {
+            color: #e74c3c;
+            border-left: 4px solid #e74c3c;
+            padding-left: 0.75rem;
+        }
+
+        .correct-text {
+            background: #d4edda;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .your-text {
+            background: #f8d7da;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .error-highlight {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        /* ==================== COMBO DISPLAY ==================== */
+        .combo-display {
+            text-align: center;
+            margin-bottom: 1rem;
+            min-height: 30px;
+        }
+
+        .combo-counter {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            animation: bounceIn 0.5s ease;
+        }
+
+        /* ==================== SESSION SUMMARY ==================== */
+        .session-summary {
+            background: #ecf0f1;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            border: 2px solid #95a5a6;
+        }
+
+        .session-summary.show {
+            display: block;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #bdc3c7;
+        }
+
+        .summary-value {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .summary-item.errors .summary-value {
+            color: #e74c3c;
+        }
+
+        .summary-item.accuracy .summary-value {
+            color: #27ae60;
+        }
+
+        /* ==================== CONTROLS AT BOTTOM ==================== */
+        .bottom-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.65rem 1.2rem;
+            border: 2px solid #95a5a6;
+            background: white;
+            color: #2c3e50;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            border-color: #2980b9;
+            color: #2980b9;
+        }
+
+        .control-btn.start {
+            background: #2980b9;
+            color: white;
+            border-color: #2980b9;
+        }
+
+        .control-btn.start:hover {
+            background: #1f618d;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.3s ease;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .top-bar {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
+
+            .setup-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .audio-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .top-bar {
+                padding: 0.5rem;
+            }
+
+            .setup-section {
+                padding: 0.75rem;
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+
+            .audio-controls {
+                gap: 0.3rem;
+            }
+
+            .audio-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==================== PRINT STYLES ==================== */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .audio-controls,
+            .bottom-controls,
+            .typing-input,
+            .submit-btn {
+                display: none;
+            }
+        }
+    </style>
+
+
+    <div class="container1">
+        <!-- HEADER -->
+        <div class="header">
+
+
+            <h1>🎧 Listen and Write</h1>
+
+            <p>Improve your typing by listening and typing what you hear</p>
+        </div>
+
+        <!-- TOP STATS BAR -->
+        <div class="top-bar">
+            <div class="stat-item">
+                <div class="stat-label">Timer</div>
+                <div class="stat-value" id="timer">00:00</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0 / 0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value accuracy" id="accuracy">0%</div>
+            </div>
+        </div>
+
+        <!-- SETUP SECTION -->
+        <div class="setup-section" id="setupSection">
+            <h3>⚙️ Configuration</h3>
+            <div class="setup-row">
+                <div class="setup-item">
+                    <label for="itemType">Item Type</label>
+                    <select id="itemType">
+                        <option value="words">Words</option>
+                        <option value="sentences">Sentences</option>
+                    </select>
+                </div>
+                <div class="setup-item">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="setup-item">
+                    <label for="batchSize">Session Size</label>
+                    <select id="batchSize">
+                        <option value="5">5 items</option>
+                        <option value="10" selected>10 items</option>
+                        <option value="15">15 items</option>
+                        <option value="20">20 items</option>
+                    </select>
+                </div>
+            </div>
+            <div class="setup-row">
+                <div class="setup-item">
+                    <label for="voice">Voice</label>
+                    <select id="voice"></select>
+                </div>
+                <div class="setup-item">
+                    <label for="rate">Speed</label>
+                    <select id="rate">
+                        <option value="0.8">Slow</option>
+                        <option value="1" selected>Normal</option>
+                        <option value="1.2">Fast</option>
+                        <option value="1.5">Very Fast</option>
+                    </select>
+                </div>
+                <div class="setup-item">
+                    <label for="pitch">Pitch</label>
+                    <select id="pitch">
+                        <option value="0.8">Low</option>
+                        <option value="1" selected>Normal</option>
+                        <option value="1.2">High</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUDIO CONTROLS -->
+        <div class="audio-controls">
+            <button class="audio-btn play" id="playBtn" disabled>
+                🔊 Play
+            </button>
+            <button class="audio-btn replay" id="replayBtn" disabled>
+                🔁 Replay <span class="replay-count" id="replayCount"></span>
+            </button>
+        </div>
+
+        <!-- TEXT DISPLAY (HIDDEN UNTIL ANSWERED) -->
+        <div class="text-display hidden" id="textDisplay">
+            👂 Listen to the audio...
+        </div>
+
+        <!-- COMBO -->
+        <div class="combo-display" id="comboDisplay"></div>
+
+        <!-- INPUT SECTION -->
+        <div class="input-section">
+            <input
+                type="text"
+                class="typing-input"
+                id="typingInput"
+                placeholder="Type what you hear..."
+                disabled
+            >
+            <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div class="feedback-section" id="feedbackSection">
+            <div id="feedbackContent"></div>
+        </div>
+
+        <!-- SESSION SUMMARY -->
+        <div class="session-summary" id="sessionSummary">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <h3 style="color: #2980b9; margin-bottom: 0.5rem;">📊 Session Summary</h3>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value" id="summaryCorrect">0</div>
+                    <div class="summary-label">Correct</div>
+                </div>
+                <div class="summary-item accuracy">
+                    <div class="summary-value" id="summaryAccuracy">0%</div>
+                    <div class="summary-label">Accuracy</div>
+                </div>
+                <div class="summary-item errors">
+                    <div class="summary-value" id="summaryErrors">0</div>
+                    <div class="summary-label">Errors</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="bottom-controls">
+            <button class="control-btn start" id="startBtn">▶ Start New Session</button>
+            <button class="control-btn" id="nextBtn" style="display: none;">Next Item</button>
+            <button class="control-btn" id="resetBtn">🔄 Reset</button>
+        </div>
+    </div>
+
+    <!-- Load JavaScript -->
+    <script src="{{ url_for('static', filename='js/listen.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
+{% endblock %}

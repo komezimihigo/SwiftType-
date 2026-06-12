@@ -1,0 +1,879 @@
+{% extends "base.html" %}
+
+{% block title %}training - Typing Trainer{% endblock %}
+
+{% block content %}
+    <style>
+        /* ==================== GLOBAL STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --correct: #22c55e;
+            --incorrect: #ef4444;
+            --neutral: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: blue;
+            font-size: 0.95rem;
+        }
+
+        /* ==================== TOP STATS ==================== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.1rem;
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .stat {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            border-color: blue;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ==================== TIMER ==================== */
+        .timer-section {
+            text-align: center;
+            margin-bottom: 0.1rem;
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            color: green;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            margin-bottom: 0.3rem;
+            transition: all 0.1s ease;
+        }
+
+        .timer.warning {
+            color: orange;
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .timer.danger {
+            color: red;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+            animation: pulse 0.5s infinite;
+        }
+
+        /* ==================== MODE SELECTOR ==================== */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease 0.2s both;
+        }
+
+        .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #334155;
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ==================== DIFFICULTY SELECTOR ==================== */
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #334155;
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .difficulty-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* ==================== COMBO SYSTEM ==================== */
+        .combo-display {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            min-height: 2rem;
+        }
+
+        .combo-counter {
+            font-size: 1.5rem;
+            color: var(--success);
+            font-weight: bold;
+            animation: bounceUp 0.5s ease;
+        }
+
+        /* ==================== TEXT DISPLAY ==================== */
+        .typing-section {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #334155;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .practice-text {
+            font-size: 1.5rem;
+            line-height: 2;
+            word-break: break-word;
+            color: #64748b;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1.5rem;
+        }
+
+        .practice-text.char {
+            padding: 2px 4px;
+            margin: 0 2px;
+            border-radius: 3px;
+            transition: all 0.05s ease;
+            position: relative;
+        }
+
+        .practice-text .correct {
+            color: var(--correct);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .practice-text .incorrect {
+            color: var(--incorrect);
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .practice-text .current {
+            color: #e2e8f0;
+            background: rgba(99, 102, 241, 0.3);
+            border-bottom: 3px solid var(--primary);
+            animation: blink 1s infinite;
+        }
+
+        .practice-text .pending {
+            color: #64748b;
+        }
+
+        /* ==================== INPUT ==================== */
+        .input-section {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .typing-input {
+            width: 100%;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid #334155;
+            border-radius: 0.75rem;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .typing-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .typing-input::placeholder {
+            color: #475569;
+        }
+
+        /* ==================== KEYBOARD ==================== */
+        .keyboard-section {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #334155;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .keyboard-section h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 100%;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .key {
+            min-width: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.05s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        .key.current {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            animation: keyPress 0.3s ease;
+            transform: scale(1.1);
+        }
+
+        .key.error {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: var(--danger);
+            animation: shake 0.3s ease;
+        }
+
+        .key.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: var(--success);
+        }
+
+
+        /* ==================== CONTROLS ==================== */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.5s both;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary1 {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary1:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ==================== RESULTS SCREEN ==================== */
+        .results-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .results-screen.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-content {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border: 2px solid #334155;
+            border-radius: 1.5rem;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .results-content h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-item {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .weak-keys-display {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .weak-keys-display h4 {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .weak-keys-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .weak-key {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .results-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0%, 49% {
+                opacity: 1;
+            }
+            50%, 100% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes keyPress {
+            0% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes bounceUp {
+            0% {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .timer {
+                font-size: 2.5rem;
+            }
+
+            .practice-text {
+                font-size: 1.2rem;
+            }
+
+            .hands-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .keyboard-section {
+                padding: 1rem;
+            }
+
+            .key {
+                min-width: 2rem;
+                width: 3rem;
+                height: 1.5rem;
+                font-size: 0.7rem;
+            }
+
+            .results-content {
+                padding: 1.5rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 4px;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .timer {
+                font-size: 1rem;
+            }
+
+            .typing-section {
+                padding: 0.5rem;
+            }
+
+            .practice-text {
+                font-size: 0.5rem;
+            }
+
+            .key {
+                min-width: 1.rem;
+                width: 1.rem;
+                height: 1rem;
+            }
+        }
+
+        .no {
+           color: black;
+           text-align: center;
+        }
+         .n {
+           color: black;
+        }
+    </style>
+
+
+ <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <p>Master your typing skills with precision and speed</p>
+            <p>Read the instructions below to understand</p>
+        </div>
+
+
+        <!-- TIMER -->
+        <div class="timer-section">
+            <div class="timer" id="timer">60</div>
+        </div>
+
+        <!-- MODE & DIFFICULTY SELECTOR -->
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="normal">Normal Mode</button>
+            <button class="mode-btn" data-mode="no-backspace">No Backspace</button>
+            <button class="mode-btn" data-mode="ai">AI Training</button>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">Easy (60s)</button>
+            <button class="difficulty-btn" data-difficulty="normal">Normal (50s)</button>
+            <button class="difficulty-btn" data-difficulty="hard">Hard (40s)</button>
+        </div>
+
+        <!-- COMBO COUNTER -->
+        <div class="combo-display">
+            <div class="combo-counter" id="comboDisplay" style="display: none;"></div>
+        </div>
+
+        <!-- TYPING SECTION -->
+        <div class="typing-section">
+            <div class="practice-text" id="practiceText">
+                <!-- Text will be loaded here -->
+            </div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="input-section">
+            <input
+                type="text"
+                class="typing-input"
+                id="typingInput"
+                placeholder="Click here and start typing..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">Start Test</button>
+            <button class="btn btn-secondary1" id="pauseBtn" disabled>Pause</button>
+            <button class="btn btn-secondary1" id="resetBtn">Reset</button>
+            <button class="btn btn-secondary1" id="newTextBtn">New Text</button>
+        </div>
+        <!-- KEYBOARD -->
+        <div >
+
+            <div class="keyboard" id="keyboard"></div>
+      </div>
+
+
+    </div>
+
+
+
+    <div class="no">
+        <img src="image.png" alt="image" width="50%" height="15.15%" >
+        </div>
+
+    <div class="n">
+            <p>Welcome. Today you will learn how to type correctly, fast, and without looking at the keyboard.</p>
+            <p><strong>step 1:</strong> First, sit properly. Keep your back straight, shoulders relaxed, and both feet flat on the ground. Place your keyboard at a comfortable height. Your wrists should not rest heavily on the table.</p>
+            <p><strong>step 2:</strong> Now place your fingers on the keyboard.</p>
+        <p><strong>step 3:</strong> Your left hand goes on A, S, D, F.</p>
+        <p>Your right hand goes on J, K, L, and ; (semicolon).</p>
+        <p>Both thumbs rest on the spacebar.</p>
+        <p>This position is called the “home row.”</p><br>
+        <p><strong>step 4:</strong> Each finger is responsible for specific keys:</p>
+        <p>Left pinky: A, Q, Z</p>
+        <p>Left ring: S, W, X</p>
+        <p>Left middle: D, E, C</p>
+        <p>Left index: F, G, R, T, V, B</p><br>
+        <p>Right index: J, H, Y, U, N, M</p>
+        <p>Right middle: K, I</p>
+        <p>Right ring: L, O</p>
+        <p>Right pinky: ;, P</p>
+        <p>Your thumbs press the spacebar.</p><br>
+        <p><strong>rule 1:</strong> Now, rule number one: always return your fingers to the home row after pressing any key.</p>
+        <p><strong>rule 2:</strong> Rule number two: use the correct finger for every key. Do not use one finger for everything.</p>
+        <p><strong>rule 3:</strong> Rule number three: do not look at the keyboard. Focus on the screen.
+</p><br>
+        <p><strong>step 5:</strong> We start slowly.</p>
+        <p><strong>step 6:</strong> Press F with your left index finger.</p>
+        <p><strong>step 7:</strong> Press J with your right index finger.</p>
+        <p><strong>step 8:</strong> Repeat: F J F J F J</p>
+        <p><strong>step 9:</strong> Now type:
+F F F J J J F J F J</p>
+        <p><strong>step 10:</strong> Good. Now we add more keys.</p>
+        <p><strong>step 11:</strong> Type:
+A S D F   J K L ;</p>
+        <p><strong>step 12:</strong> Keep your fingers relaxed. Do not rush.</p>
+        <p><strong>step 13:</strong> Now simple words:</p>
+        <p>ask, dad, fall, sad, lad, all</p>
+         <p>Focus on accuracy, not speed.</p>
+        <p><strong>step 14:</strong> If you make a mistake, do not panic. Slow down and continue.</p>
+        <p><strong>step 15:</strong> Now we train rhythm.</p>
+        <p><strong>step 16:</strong> Type this line slowly and evenly:</p>
+        <p>as as as as</p>
+        <p>df df df df</p>
+        <p>jk jk jk jk</p>
+        <br>
+        <p><strong>step 17:</strong> Now we increase difficulty.</p>
+        <p><strong>Type:</strong> fast, glass, skill, fall, ask, dad</p>
+        <p><strong>Remember:</strong> Accuracy first. Speed comes later.</p><br>
+        <p><strong>step 18:</strong> Now full sentence:</p>
+        <p><strong>step 19:</strong> the quick brown fox jumps over the lazy dog</p>
+        <p>Do not rush. Stay consistent.</p><br>
+        <p><strong>step 20:</strong> Now timing practice</p>
+        <p>You have 60 seconds. Type as many correct words as possible.
+Focus on rhythm, not speed.</p>
+        <p>(After time ends)</p>
+        <p>Stop. Hands off the keyboard.</p><br>
+        <p><strong>step 21: Check your results:</strong></p><p>
+        Accuracy, Mistakes, Speed</p>
+        <p>If accuracy is below 90%, slow down next time.</p>
+        <p>If accuracy is high, increase speed gradually.</p><br>
+        <p><strong>step 22: Now advanced rule:</strong> </p>
+        <p>Train your weak keys.</p>
+        <p>If you struggle with “S”, practice words like:
+sun, sand, safe, slow</p><br>
+        <p><strong>step 23: Final rule:</strong> </p>
+        <p>Repeat them until comfortable.</p>
+        <p>Practice every day. Even 10 minutes builds muscle memory.</p>
+        <p>Consistency beats speed.</p>
+        <p>You are not just typing — you are training your brain and your hands to work together.</p>
+        <p>End of training.</p>
+
+
+</div>
+
+
+
+
+    <!-- RESULTS SCREEN -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="results-content">
+            <h2>✨ Test Complete!</h2>
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-value" id="finalWpm">0</div>
+                    <div class="result-label">Final WPM</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalAccuracy">0%</div>
+                    <div class="result-label">Accuracy</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalErrors">0</div>
+                    <div class="result-label">Errors</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-value" id="finalCharacters">0</div>
+                    <div class="result-label">Typed</div>
+                </div>
+            </div>
+            <div class="weak-keys-display">
+                <h4>Weak Keys (Focus Area)</h4>
+                <div class="weak-keys-list" id="weakKeysList"></div>
+            </div>
+            <div class="results-buttons">
+                <button class="btn btn-primary" id="retryBtn">Try Again</button>
+                <button class="btn btn-secondary1" id="aiTrainBtn">AI Training</button>
+            </div>
+        </div>
+    </div>
+ </div>
+
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/trainer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/listen.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

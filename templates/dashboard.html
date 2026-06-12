@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Typing Trainer{% endblock %}
+
+{% block content %}
+<script>
+
+window.addEventListener("load", function () {
+
+    const fromTest =
+        localStorage.getItem("fromTypingTest");
+
+    if (fromTest === "true") {
+
+        const results =
+            document.getElementById("results-screen");
+
+        results.style.display = "flex";
+
+        document.getElementById("finalWpm").textContent =
+            localStorage.getItem("savedWpm") || "0";
+
+        document.getElementById("finalAccuracy").textContent =
+            localStorage.getItem("savedAccuracy") || "0%";
+
+        document.getElementById("finalErrors").textContent =
+            localStorage.getItem("savedErrors") || "0";
+
+        document.getElementById("finalCharacters").textContent =
+            localStorage.getItem("savedCharacters") || "0";
+
+        localStorage.removeItem("fromTypingTest");
+
+    }
+
+});
+
+</script>
+ <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+
+
+<div class="container">
+    <div class="dashboard-container">
+        <h1>Your Dashboard</h1>
+
+<div id="results-screen" style="display:none;">
+
+    <div class="results-content">
+
+        <h2>Test Results</h2>
+
+        <div class="results-grid">
+
+            <div class="result-item">
+                <div class="result-value" id="finalWpm">0</div>
+                <div class="result-label">WPM</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-value" id="finalAccuracy">0%</div>
+                <div class="result-label">Accuracy</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-value" id="finalErrors">0</div>
+                <div class="result-label">Errors</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-value" id="finalCharacters">0</div>
+                <div class="result-label">Characters</div>
+            </div>
+
+        </div>
+
+        <button id="closeResultsBtn" class="btn btn-primary btn-lg">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+
+
+        
+        <!-- Statistics Summary -->
+        <section class="stats-summary">
+            <h2>Statistics</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <label>Total Tests</label>
+                    <span class="summary-value" id="totalTests">0</span>
+                </div>
+                <div class="summary-card">
+                    <label>Average WPM</label>
+                    <span class="summary-value" id="avgWpm">0</span>
+                </div>
+                <div class="summary-card">
+                    <label>Best WPM</label>
+                    <span class="summary-value" id="bestWpm">0</span>
+                </div>
+                <div class="summary-card">
+                    <label>Average Accuracy</label>
+                    <span class="summary-value" id="avgAccuracy">0%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weak Keys -->
+        <section class="weak-keys-section">
+            <h2>Your Weak Keys</h2>
+            <div id="weakKeysContainer" class="weak-keys-grid">
+                <p>No weak keys yet. Keep practicing!</p>
+            </div>
+            <a href="/test?mode=weak_keys" class="btn btn-primary">Practice Weak Keys</a>
+        </section>
+
+        <!-- Recent Results -->
+        <section class="recent-results-section">
+            <h2>Recent Tests</h2>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>WPM</th>
+                        <th>Raw WPM</th>
+                        <th>Accuracy</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody">
+                    <tr>
+                        <td colspan="5">Loading results...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+ </div>
+
+<script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

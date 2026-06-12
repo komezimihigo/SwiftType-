@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Typing Test - Typing Trainer{% endblock %}
+
+{% block content %}
+ <!-- LOADING SIGN -->
+   <div class="loader-overlay" id="loaderOverlay">
+        <div class="loader-container">
+            <div class="cube-scene">
+                <div class="rubiks-cube" id="rubiksCube"></div>
+            </div>
+            <div class="loader-text">LOADING...</div>
+        </div>
+    </div>
+
+ <div class="page-content" id="pageContent">
+<div class="container">
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Typing Test</h1>
+            <div class="test-mode-selector">
+                <button id="normalMode" class="mode-btn active" data-mode="normal">Normal</button>
+                <button id="weakMode" class="mode-btn" data-mode="weak_keys">Weak Keys</button>
+            </div>
+        </div>
+
+        <!-- Practice Text Display -->
+        <div class="text-display">
+            <div id="practiceText" class="practice-text">
+                Loading text...
+            </div>
+            <div id="typedText" class="typed-text">
+                <span id="typedOutput"></span><span class="cursor"></span>
+            </div>
+        </div>
+
+        <!-- Typing Input -->
+        <div class="typing-input-container">
+            <input
+                type="text"
+                id="typingInput"
+                class="typing-input"
+                placeholder="Click here and start typing..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+
+        <!-- Stats Display -->
+        <div class="stats-display">
+            <div class="stat">
+                <span class="stat-label">WPM</span>
+                <span class="stat-value" id="wpmDisplay">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Accuracy</span>
+                <span class="stat-value" id="accuracyDisplay">100%</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Errors</span>
+                <span class="stat-value" id="errorsDisplay">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time</span>
+                <span class="stat-value" id="timeDisplay">0s</span>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="test-controls">
+            <button id="resetBtn" class="btn btn-secondary">Reset</button>
+            <button id="submitBtn" class="btn btn-primary" disabled>Submit Result</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="successMessage" class="alert alert-success" style="display:none;"></div>
+        <div id="errorMessage" class="alert alert-error" style="display:none;"></div>
+    </div>
+</div>
+ </div>
+
+<script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+<script src="{{ url_for('static', filename='js/typing.js') }}"></script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+{% endblock %}

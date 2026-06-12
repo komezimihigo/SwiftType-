@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Typing Trainer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-container">
+        <h1>⚙️ Admin Dashboard</h1>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="overview">Overview</button>
+            <button class="tab-btn" data-tab="users">Users</button>
+            <button class="tab-btn" data-tab="results">Results</button>
+            <button class="tab-btn" data-tab="visitors">Visitors</button>
+            <button class="tab-btn" data-tab="stats">Statistics</button>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="overview" class="tab-content active">
+            <h2>System Overview</h2>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="card-icon">👥</div>
+                    <div class="card-content">
+                        <h3>Total Users</h3>
+                        <p class="card-value" id="totalUsers">0</p>
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">⌨️</div>
+                    <div class="card-content">
+                        <h3>Total Tests</h3>
+                        <p class="card-value" id="totalTests">0</p>
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">👁️</div>
+                    <div class="card-content">
+                        <h3>Total Visits</h3>
+                        <p class="card-value" id="totalVisits">0</p>
+                    </div>
+                </div>
+
+                <div class="overview-card">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-content">
+                        <h3>Unique IPs</h3>
+                        <p class="card-value" id="uniqueIps">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Users -->
+            <section class="overview-section">
+                <h3>Top Performers</h3>
+                <table class="overview-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Tests</th>
+                            <th>Avg WPM</th>
+                            <th>Best WPM</th>
+                            <th>Avg Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topUsersTable">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Recent Visitors -->
+            <section class="overview-section">
+                <h3>Recent Visitors</h3>
+                <table class="overview-table">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Country</th>
+                            <th>City</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentVisitorsTable">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- USERS TAB -->
+        <div id="users" class="tab-content">
+            <h2>Registered Users</h2>
+
+            <div class="section-controls">
+                <input type="text" id="userSearch" class="search-input" placeholder="Search users...">
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable">
+                    <tr><td colspan="6">Loading users...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- RESULTS TAB -->
+        <div id="results" class="tab-content">
+            <h2>All Typing Results</h2>
+
+            <div class="section-controls">
+                <label>Filter:
+                    <select id="resultLimit">
+                        <option value="50">Last 50</option>
+                        <option value="100">Last 100</option>
+                        <option value="200">Last 200</option>
+                    </select>
+                </label>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>WPM</th>
+                        <th>Raw WPM</th>
+                        <th>Accuracy</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTable">
+                    <tr><td colspan="6">Loading results...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VISITORS TAB -->
+        <div id="visitors" class="tab-content">
+            <h2>Visitor Tracking</h2>
+
+            <div class="visitors-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Visits</span>
+                    <span class="stat-number" id="visitorTotal">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Unique IPs</span>
+                    <span class="stat-number" id="visitorUnique">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Logged In</span>
+                    <span class="stat-number" id="visitorLoggedIn">0</span>
+                </div>
+            </div>
+
+            <h3>Top Countries</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Visits</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody id="countriesTable">
+                    <tr><td colspan="3">Loading...</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Recent Visitor Log</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>IP Address</th>
+                        <th>Country</th>
+                        <th>City</th>
+                        <th>Visit Time</th>
+                        <th>Logged In</th>
+                        <th>User ID</th>
+                    </tr>
+                </thead>
+                <tbody id="visitorsTable">
+                    <tr><td colspan="6">Loading visitors...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- STATS TAB -->
+        <div id="stats" class="tab-content">
+            <h2>User Statistics</h2>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Tests</th>
+                        <th>Avg WPM</th>
+                        <th>Best WPM</th>
+                        <th>Avg Accuracy</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="statsTable">
+                    <tr><td colspan="6">Loading stats...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- User Details Modal -->
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalUserName"></h2>
+
+        <div class="modal-tabs">
+            <button class="modal-tab-btn active" data-modal-tab="info">Info</button>
+            <button class="modal-tab-btn" data-modal-tab="results">Results</button>
+        </div>
+
+        <div id="info" class="modal-tab-content active">
+            <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+            <p><strong>Admin:</strong> <span id="modalAdmin"></span></p>
+            <p><strong>Joined:</strong> <span id="modalJoined"></span></p>
+
+            <div class="admin-toggle">
+                <label>
+                    <input type="checkbox" id="adminToggle">
+                    Make Admin
+                </label>
+            </div>
+        </div>
+
+        <div id="results" class="modal-tab-content">
+            <table class="modal-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>WPM</th>
+                        <th>Accuracy</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+                <tbody id="userResultsTable">
+                    <tr><td colspan="4">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
