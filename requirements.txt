@@ -1,0 +1,6 @@
+Flask
+Flask-Dance
+requests
+google-generativeai
+Werkzeug
+gunicorn
