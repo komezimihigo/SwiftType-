@@ -1,4 +1,3 @@
-
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import models
@@ -17,8 +16,6 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.profile"
     ]
 )
-
-import os
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
