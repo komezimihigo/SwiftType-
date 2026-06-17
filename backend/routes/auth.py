@@ -9,8 +9,8 @@ import os
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 google_bp = make_google_blueprint(
-    client_id=os.getenv("280114387732-tbnvsfpkk3e5me2is1jpmk192nqmpm97.apps.googleusercontent.com"),
-    client_secret=os.getenv("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"),
+    client_id="280114387732-tbnvsfpkk3e5me2is1jpmk192nqmpm97.apps.googleusercontent.com",
+    client_secret="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",
     scope=[
         "openid",
         "https://www.googleapis.com/auth/userinfo.email",
