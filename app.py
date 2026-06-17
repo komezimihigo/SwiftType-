@@ -6,10 +6,19 @@ from datetime import datetime, timedelta
 from functools import wraps
 from database.models import create_tables
 from flask_dance.contrib.google import google
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-change-this'
+app.wsgi_app = ProxyFix(
+    app.wsgi_app,
+    x_for=1,
+    x_proto=1,
+    x_host=1,
+    x_port=1
+)
+app.secret_key = '1234567890'
 app.config['DATABASE'] = 'typing_app.db'
 
 # Import routes and services
