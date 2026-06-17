@@ -18,7 +18,7 @@ google_bp = make_google_blueprint(
     ]
 )
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 
 # Register route
