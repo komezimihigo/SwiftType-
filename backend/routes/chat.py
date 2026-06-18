@@ -11,6 +11,9 @@ from database import models
 
 chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 
+import os
+
+print("GEMINI KEY:", os.getenv("GEMINI_API_KEY"))
 # Configuration
 GEMINI_API_KEY = "AQ.Ab8RN6JA4I528DsS8KE95XPXdRFHMBpCw0qYN3N4kkUsaBGhoA",
 
