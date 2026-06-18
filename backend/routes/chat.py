@@ -12,7 +12,7 @@ from database import models
 chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 
 # Configuration
-GEMINI_API_KEY = os.environ.get("AlzaSyC7GKyc1LsmXG29RYn_4daBlqmp1Gk7gL4", "AIzaSyDzC-eI5ROZEMlB6W58o4P_0ZC873d3pAs")
+GEMINI_API_KEY = "AQ.Ab8RN6JA4I528DsS8KE95XPXdRFHMBpCw0qYN3N4kkUsaBGhoA",
 
 GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent'
 
