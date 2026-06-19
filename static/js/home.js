@@ -134,7 +134,7 @@ async function loadPracticeText() {
 
 
         state.practiceText =
-            "The quick brown fox jumps over the lazy dog every morning. Learning to type faster requires practice and consistency. Technology continues to change the way people communicate. A good keyboard can improve comfort during long sessions. Students often use computers for research and assignments. Reading books helps expand vocabulary and critical thinking. The internet connects billions of people around the world. Programming is a valuable skill in the modern digital age. Healthy habits contribute to both physical and mental wellness. Small daily improvements can lead to significant results.";
+            "The quick brown fox jumps over the lazy dog every morning. Learning to type faster requires practice and consistency. Technology continues to change the way people communicate. A good keyboard can improve comfort during long sessions. Students often use computers for research and assignments. Reading books helps expand vocabulary and critical thinking.";
 
     }
 
