@@ -587,7 +587,7 @@ body {
 
 .summary-value {
     display: block;
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -636,14 +636,14 @@ body {
 }
 
 .results-table th {
-    padding: 1rem;
+    padding: 0.1rem;
     text-align: left;
     font-weight: 600;
     color: var(--text-dark);
 }
 
 .results-table td {
-    padding: 1rem;
+    padding: 0.1rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -1025,7 +1025,7 @@ body {
     background: white;
     border-radius: 0.75rem;
     box-shadow: var(--shadow);
-    margin: 2rem 0;
+    margin: 15px;
     overflow: hidden;
 }
 
@@ -1177,7 +1177,7 @@ body {
 }
 
 .send-btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 0.75rem;
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -1186,7 +1186,7 @@ body {
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem;
     transition: all 0.3s;
 }
 
@@ -2042,14 +2042,14 @@ a.ai-btn, a.ai-btn:visited, a.ai-btn:active, a.ai-btn:focus{
 }
 
 .typingModal{
-    width:80%;
+    width:97%;
     max-width:1000px;
-    height:91%;
+    height:97%;
     background:#fff;
 
     border-radius:20px;
 
-    padding:25px;
+    padding:10px;
 
     position:relative;
 
