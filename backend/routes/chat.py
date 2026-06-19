@@ -12,11 +12,11 @@ from database import models
 chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 
 # Configuration
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY"),
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 GEMINI_API_URL = ("https://generativelanguage.googleapis.com/v1beta/models/"
             f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}")
-
+print("KEY TYPE:", type(GEMINI_API_KEY))
 
 # Login required decorator
 def login_required(f):
