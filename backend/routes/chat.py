@@ -144,7 +144,10 @@ def call_gemini_api(message):
         }
 
         # Add API key to URL
-        url = f"{GEMINI_API_URL}?key={GEMINI_API_KEY}"
+        GEMINI_API_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    "gemini-2.5-flash:generateContent"
+        )
 
         # Make request
         response = requests.post(
