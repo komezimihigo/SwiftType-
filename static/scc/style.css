@@ -2158,4 +2158,77 @@ a.ai-btn, a.ai-btn:visited, a.ai-btn:active, a.ai-btn:focus{
 }
 
 
+/* Mobile Fix */
+@media (max-width: 768px) {
 
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .container,
+    .chat-container,
+    .test-container,
+    .dashboard-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    .chat-wrapper,
+    .text-display,
+    .stats-display,
+    .summary-grid,
+    .results-grid,
+    .weak-keys-grid,
+    .suggestions-grid {
+        width: 100% !important;
+    }
+
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .chat-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .input-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .send-btn {
+        width: 100%;
+    }
+
+    img,
+    video,
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .summary-grid,
+    .results-grid,
+    .stats-display,
+    .suggestions-grid {
+        grid-template-columns: 1fr !important;
+    }
+    }
