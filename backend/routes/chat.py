@@ -14,8 +14,8 @@ chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 # Configuration
 GEMINI_API_KEY = "AQ.Ab8RN6LQm7xazYkA9mWhwvL76Bha51diPhBa_X2f9k4PV9Yryw",
 
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/"
-            f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+GEMINI_API_URL = ("https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}")
 
 
 # Login required decorator
