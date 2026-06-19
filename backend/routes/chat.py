@@ -14,8 +14,10 @@ chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 # Configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-GEMINI_API_URL = ("https://generativelanguage.googleapis.com/v1beta/models/"
-            f"gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}")
+GEMINI_API_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    "gemini-2.5-flash:generateContent"
+)
 print("KEY TYPE:", type(GEMINI_API_KEY))
 print("API KEY:", GEMINI_API_KEY)
 print("URL:", GEMINI_API_URL)
@@ -144,10 +146,7 @@ def call_gemini_api(message):
         }
 
         # Add API key to URL
-        GEMINI_API_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.5-flash:generateContent"
-        )
+        url = f"{GEMINI_API_URL}?key={GEMINI_API_KEY}"
 
         # Make request
         response = requests.post(
