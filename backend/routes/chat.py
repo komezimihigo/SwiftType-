@@ -12,9 +12,9 @@ from database import models
 chat_bp = Blueprint('chat', __name__, url_prefix='/chat')
 
 # Configuration
-GEMINI_API_KEY = "AQ.Ab8RN6Ih3sYbsvdM0L5jvavl43wAt_ajYlDKWoNn8iFu4vjoVA"
+GEMINI_API_KEY = "AQ.Ab8RN6LQm7xazYkA9mWhwvL76Bha51diPhBa_X2f9k4PV9Yryw",
 
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
 
 
 # Login required decorator
@@ -176,3 +176,4 @@ def call_gemini_api(message):
     except Exception as e:
         print(f"Unexpected error calling Gemini API: {str(e)}")
         return None
+        
