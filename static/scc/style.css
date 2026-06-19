@@ -2042,9 +2042,9 @@ a.ai-btn, a.ai-btn:visited, a.ai-btn:active, a.ai-btn:focus{
 }
 
 .typingModal{
-    width:97%;
+    width:87%;
     max-width:1000px;
-    height:97%;
+    height:90%;
     background:#fff;
 
     border-radius:20px;
